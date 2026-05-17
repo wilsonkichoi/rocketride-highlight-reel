@@ -1,0 +1,151 @@
+{
+  "project_id": "9b7f2f6e-fb23-4082-9ab8-6ba2669ca41d",
+  "components": [
+    {
+      "id": "chat_1",
+      "provider": "chat",
+      "config": {
+        "hideForm": true,
+        "mode": "Source",
+        "parameters": {},
+        "type": "chat"
+      },
+      "ui": {
+        "position": {
+          "x": 100,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      }
+    },
+    {
+      "id": "agent_deepagent_1",
+      "provider": "agent_langchain",
+      "config": {
+        "instructions": "You are a Video Highlight Generator. When you receive any message, immediately call the highlight-reel.analyze_videos tool with video_dir set to ./asset. Then take the cut_segments from the result and call highlight-reel.create_highlight with video_dir=./asset, the cut_segments, and output_path=./output/highlight_reel.mp4. Finally respond with the summary.",
+        "parameters": {}
+      },
+      "ui": {
+        "position": {
+          "x": 329,
+          "y": 281
+        },
+        "measured": {
+          "width": 150,
+          "height": 86
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "questions",
+          "from": "chat_1"
+        }
+      ]
+    },
+    {
+      "id": "llm_gemini_1",
+      "provider": "llm_gemini",
+      "config": {
+        "profile": "gemini-2_5-flash",
+        "parameters": {},
+        "5-flash": {
+          "apikey": ""
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 600,
+          "y": 150
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "llm",
+          "from": "agent_deepagent_1"
+        }
+      ]
+    },
+    {
+      "id": "mcp_client_1",
+      "provider": "mcp_client",
+      "config": {
+        "serverName": "highlight-reel",
+        "transport": "stdio",
+        "type": "mcp_client",
+        "stdio": {
+          "commandLine": "./highlight_reel_mcp/run.sh"
+        },
+        "http": {
+          "bearer": "",
+          "endpoint": "",
+          "headers": {}
+        },
+        "parameters": {}
+      },
+      "ui": {
+        "position": {
+          "x": 611,
+          "y": 267
+        },
+        "measured": {
+          "width": 150,
+          "height": 40
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "tool",
+          "from": "agent_deepagent_1"
+        }
+      ]
+    },
+    {
+      "id": "response_answers_1",
+      "provider": "response_answers",
+      "config": {
+        "laneName": "answers"
+      },
+      "ui": {
+        "position": {
+          "x": 850,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "answers",
+          "from": "agent_deepagent_1"
+        }
+      ]
+    }
+  ],
+  "version": 1,
+  "source": "chat_1",
+  "viewport": {
+    "x": -63,
+    "y": 51,
+    "zoom": 1.15
+  },
+  "docRevision": 8
+}
